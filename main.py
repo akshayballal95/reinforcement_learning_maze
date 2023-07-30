@@ -74,15 +74,16 @@ player_pos = env.state
 
 def reset_goal():
     # Check if the player reached the goal, then reset the goal
-    if(env.state == env.goal_pos):
+    if env.state == env.goal_pos:
         env.reset()
         env.solve()
 
+
 # Game loop
 while running:
-    #Start a new thread
+    # Start a new thread
     x = threading.Thread(target=reset_goal)
-    x.daemon=True
+    x.daemon = True
     x.start()
 
     for event in pygame.event.get():
@@ -138,19 +139,34 @@ while running:
     action = np.argmax(env.policy_probs[player_pos])
 
     # Move the player based on the action
-    if action == 1 and player_pos[0] > 0 and (player_pos[0] - 1, player_pos[1]) not in env.walls:
+    if (
+        action == 1
+        and player_pos[0] > 0
+        and (player_pos[0] - 1, player_pos[1]) not in env.walls
+    ):
         player_pos = (player_pos[0] - 1, player_pos[1])
         env.state = player_pos
-    elif action == 3 and player_pos[0] < NUMBER_OF_TILES - 1 and (player_pos[0] + 1, player_pos[1]) not in env.walls:
+    elif (
+        action == 3
+        and player_pos[0] < NUMBER_OF_TILES - 1
+        and (player_pos[0] + 1, player_pos[1]) not in env.walls
+    ):
         player_pos = (player_pos[0] + 1, player_pos[1])
         env.state = player_pos
-    elif action == 0 and player_pos[1] > 0 and (player_pos[0], player_pos[1] - 1) not in env.walls:
+    elif (
+        action == 0
+        and player_pos[1] > 0
+        and (player_pos[0], player_pos[1] - 1) not in env.walls
+    ):
         player_pos = (player_pos[0], player_pos[1] - 1)
         env.state = player_pos
-    elif action == 2 and player_pos[1] < NUMBER_OF_TILES - 1 and (player_pos[0], player_pos[1] + 1) not in env.walls:
+    elif (
+        action == 2
+        and player_pos[1] < NUMBER_OF_TILES - 1
+        and (player_pos[0], player_pos[1] + 1) not in env.walls
+    ):
         player_pos = (player_pos[0], player_pos[1] + 1)
         env.state = player_pos
-
 
     x.join()
 
