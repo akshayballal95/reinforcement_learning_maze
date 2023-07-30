@@ -1,7 +1,7 @@
 import pygame
 import numpy as np
 from maze import Maze
-import random
+import threading
 
 # Constants
 GAME_HEIGHT = 600
@@ -74,11 +74,17 @@ player_pos = env.state
 time = 0
 
 def reset_goal():
-    env.reset()
-    env.solve()
+    if(env.state == env.goal_pos):
+        env.reset()
+        env.solve()
 
 # Game loop
 while running:
+    x = threading.Thread(target=reset_goal)
+    x.daemon=True
+    x.start()
+
+
     time = time + clock.get_time()
 
     for event in pygame.event.get():
@@ -148,10 +154,14 @@ while running:
         env.state = player_pos
 
     # Check if the player reached the goal, then reset the goal
-    if env.state == env.goal_pos:
-        reset_goal()
+
+    # if env.state == env.goal_pos:
+ 
+        # reset_goal()
 
     # Control the frame rate of the game
+    x.join()
+
     clock.tick(30)
 
 # Quit Pygame when the game loop is exited
