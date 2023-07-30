@@ -71,21 +71,19 @@ running = True
 treasure_pos = env.goal_pos
 player_pos = env.state
 
-time = 0
 
 def reset_goal():
+    # Check if the player reached the goal, then reset the goal
     if(env.state == env.goal_pos):
         env.reset()
         env.solve()
 
 # Game loop
 while running:
+    #Start a new thread
     x = threading.Thread(target=reset_goal)
     x.daemon=True
     x.start()
-
-
-    time = time + clock.get_time()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -153,16 +151,11 @@ while running:
         player_pos = (player_pos[0], player_pos[1] + 1)
         env.state = player_pos
 
-    # Check if the player reached the goal, then reset the goal
 
-    # if env.state == env.goal_pos:
- 
-        # reset_goal()
-
-    # Control the frame rate of the game
     x.join()
 
-    clock.tick(30)
+    # Control the frame rate of the game
+    clock.tick(60)
 
 # Quit Pygame when the game loop is exited
 pygame.quit()
