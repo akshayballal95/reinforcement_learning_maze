@@ -22,7 +22,8 @@ class Maze:
         self.tile_size = MAZE_HEIGHT // self.number_of_tiles
         self.maze, self.walls = self.create_maze(level)
         self.goal_pos = goal_pos
-        self.state = self.get_init_state(level)
+        self.level = level
+        self.state = self.get_init_state(self.level)
 
         self.state_values = np.zeros((self.number_of_tiles, self.number_of_tiles))
         self.policy_probs = np.full(
@@ -91,6 +92,7 @@ class Maze:
         next_state = self._get_next_state(self.state, action)
         reward = self.compute_reward(self.state, action)
         done = next_state == self.goal
+        self.state = next_state
         return next_state, reward, done
 
     def simulate_step(self, state, action):
@@ -167,10 +169,15 @@ class Maze:
 
                         delta = max(delta, abs(old_value - self.state_values[row, col]))
 
-    def reset(self):
-        """Reset the maze environment."""
+    def reset_goal(self):
+        """Reset the goal position"""
         self.state_values = np.zeros((self.number_of_tiles, self.number_of_tiles))
         self.policy_probs = np.full(
             (self.number_of_tiles, self.number_of_tiles, 4), 0.25
         )
         self.goal_pos = random.sample(self.maze, 1)[0]
+
+    def reset_state(self):
+        """Reset the maze environment."""
+        self.state = self.get_init_state(self.level)
+        return self.state

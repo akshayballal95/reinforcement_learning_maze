@@ -47,7 +47,7 @@ env = Maze(
     MAZE_WIDTH=GAME_WIDTH,
     SIZE=NUMBER_OF_TILES,
 )
-env.reset()
+# env.reset_goal()
 env.solve()
 
 SCREEN_HEIGHT = 700
@@ -75,7 +75,7 @@ player_pos = env.state
 def reset_goal():
     # Check if the player reached the goal, then reset the goal
     if env.state == env.goal_pos:
-        env.reset()
+        env.reset_goal()
         env.solve()
 
 
