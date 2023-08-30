@@ -159,3 +159,11 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 test.ipynb
+test2.ipynb
+action.npy
+test3.ipynb
+off_policy_10000_episodes.npy
+SARSA.ipynb
+off_policy_monte_carlo.ipynb
+q_learning.ipynb
+continuous_tasks.ipynb

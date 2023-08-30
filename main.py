@@ -17,7 +17,7 @@ level = [
     "X XXXXXXXX          XXXXX",
     "X XXXXXXXX  XXXXXX  XXXXX",
     "X      XXX  XXXXXX  XXXXX",
-    "X      XXX  XXX        PX",
+    "X      XXX  XXX         X",
     "XXXXXX  XX  XXX        XX",
     "XXXXXX  XX  XXXXXX  XXXXX",
     "XXXXXX  XX  XXXXXX  XXXXX",
@@ -27,7 +27,7 @@ level = [
     "X             XXXXXXXXXXX",
     "XXXXXXXXXXX      XXXXX  X",
     "XXXXXXXXXXXXXXX  XXXXX  X",
-    "XXX  XXXXXXXXXX         X",
+    "XXXP XXXXXXXXXX         X",
     "XXX                     X",
     "XXX         XXXXXXXXXXXXX",
     "XXXXXXXXXX  XXXXXXXXXXXXX",
@@ -47,11 +47,8 @@ env = Maze(
     MAZE_WIDTH=GAME_WIDTH,
     SIZE=NUMBER_OF_TILES,
 )
-# env.reset_goal()
 env.solve()
 
-SCREEN_HEIGHT = 700
-SCREEN_WIDTH = 700
 
 TILE_SIZE = GAME_HEIGHT // NUMBER_OF_TILES
 
@@ -137,6 +134,7 @@ while running:
 
     # Get the action based on the current policy
     action = np.argmax(env.policy_probs[player_pos])
+    # action = np.argmax(env.action_values[player_pos])
 
     # Move the player based on the action
     if (

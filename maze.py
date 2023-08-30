@@ -1,6 +1,7 @@
 import numpy as np
 import random
 from typing import Tuple
+from tqdm.auto import tqdm
 
 
 class Maze:
@@ -29,6 +30,7 @@ class Maze:
         self.policy_probs = np.full(
             (self.number_of_tiles, self.number_of_tiles, 4), 0.25
         )
+        self.action_values = np.zeros((self.number_of_tiles, self.number_of_tiles, 4))
 
     def create_maze(self, level):
         """
@@ -169,6 +171,36 @@ class Maze:
 
                         delta = max(delta, abs(old_value - self.state_values[row, col]))
 
+    def target_policy(self, state):
+        av = self.action_values[state]
+        return np.random.choice(np.flatnonzero(av == av.max()))
+
+    def exploratory_policy(self, state, epsilon):
+        if np.random.rand() < epsilon:
+            return np.random.randint(4)
+
+        else:
+            av = self.action_values[state]
+            return np.random.choice(np.flatnonzero(av == av.max()))
+
+    def sarsa(self, gamma=0.99, alpha=0.2, epsilon=0.3, episodes=1000):
+        init_state = self.state
+        self.action_values = np.zeros((self.number_of_tiles, self.number_of_tiles, 4))
+        for _ in tqdm(range(episodes)):
+            done = False
+            state = init_state
+            action = self.exploratory_policy(state, epsilon)
+            while not done:
+                next_state, reward, done = self.simulate_step(state, action)
+                next_action = self.exploratory_policy(next_state, epsilon)
+                qsa = self.action_values[state][action]
+                next_qsa = self.action_values[next_state][next_action]
+                self.action_values[state][action] = qsa + alpha * (
+                    reward + gamma * next_qsa - qsa
+                )
+                state = next_state
+                action = next_action
+
     def reset_goal(self):
         """Reset the goal position"""
         self.state_values = np.zeros((self.number_of_tiles, self.number_of_tiles))
@@ -180,4 +212,5 @@ class Maze:
     def reset_state(self):
         """Reset the maze environment."""
         self.state = self.get_init_state(self.level)
+
         return self.state
